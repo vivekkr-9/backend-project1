@@ -1,9 +1,9 @@
 const asyncHandler = (requestHandler)=>{                      // this function is a new way to code 
-    (req,res,next)=>{                                          // that is used in the place of the method
+    return (req,res,next)=>{                                          // that is used in the place of the method
         Promise.resolve(requestHandler(req,res,next)).          //  written below of examples
-        catch((err)=>next(err))
-    }
-}
+        catch((err)=>next(err));
+    };
+};
 
 export {asyncHandler}
 
