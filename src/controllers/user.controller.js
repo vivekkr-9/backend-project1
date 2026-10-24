@@ -31,11 +31,20 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "User already exists");
     }
 
-    const avatarLocalPath = req.files?.avatar?.[0]?.path || null;
-    const coverImageLocalPath = req.files?.coverImage?.[0]?.path || null;
+    const avatarLocalPath = req.file?.path || req.files?.avatar?.[0]?.path || req.files?.avatar?.path || null;
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.path || req.files?.coverImage?.path || null;
 
-    const avatarUrlFromBody = typeof req.body.avatar === "string" && req.body.avatar.trim() ? req.body.avatar.trim() : null;
-    const coverImageUrlFromBody = typeof req.body.coverImage === "string" && req.body.coverImage.trim() ? req.body.coverImage.trim() : null;
+    const avatarUrlFromBody = typeof req.body.avatar === "string" && req.body.avatar.trim()
+        ? req.body.avatar.trim()
+        : Array.isArray(req.body.avatar) && req.body.avatar[0]?.trim()
+            ? req.body.avatar[0].trim()
+            : null;
+
+    const coverImageUrlFromBody = typeof req.body.coverImage === "string" && req.body.coverImage.trim()
+        ? req.body.coverImage.trim()
+        : Array.isArray(req.body.coverImage) && req.body.coverImage[0]?.trim()
+            ? req.body.coverImage[0].trim()
+            : null;
 
     let avatar = null;
     if (avatarUrlFromBody) {
@@ -52,7 +61,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     if (!avatar || !avatar.url) {
-        throw new ApiError(400, "Avatar file is required");
+        avatar = { url: process.env.DEFAULT_AVATAR_URL || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&w=500&q=80" };
     }
 
     const user = await User.create({

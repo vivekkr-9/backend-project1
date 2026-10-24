@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar:{
         type: String,       //cloudnary url ,it is like aws
-        required :true,
+        default: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&w=500&q=80",
     },
     coverImage:{
         type: String,
@@ -46,13 +46,12 @@ const userSchema = new mongoose.Schema({
     }
 
 
-},{timestamp:true});
+},{timestamps:true});
 
-userSchema.pre("save",async function (next){
-    if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
 
-    this.password = await bcrypt.hash(this.password, 10)
-    next()
+    this.password = await bcrypt.hash(this.password, 10);
 })
 
 userSchema.methods.isPasswordCorrect = async function (password){
