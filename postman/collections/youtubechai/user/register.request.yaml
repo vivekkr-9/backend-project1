@@ -1,5 +1,5 @@
 $kind: http-request
 description: ""
-url: http://localhost:8000/api/v1/users/register
+url: "{{server}}/users/logout"
 method: POST
 order: 1000
