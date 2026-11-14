@@ -5,7 +5,7 @@ const asyncHandler = (requestHandler)=>{                      // this function i
     };
 };
 
-export {asyncHandler}
+export {asyncHandler};
 
 //Examples to show and understand
 // const asyncHandler = () => {}
